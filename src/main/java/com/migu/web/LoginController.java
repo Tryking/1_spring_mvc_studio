@@ -23,6 +23,12 @@ public class LoginController {
         return "login";
     }
 
+    @RequestMapping(value = "/register.html")
+    public String registerPage() {
+        log.error("********进入register.html页面***********");
+        return "register";
+    }
+
     @RequestMapping(value = "/loginCheck.html")
     public ModelAndView loginCheck(HttpServletRequest request, LoginCommand command) {
         log.error("********进入loginCheck.html页面***********");
@@ -39,6 +45,26 @@ public class LoginController {
 
             request.getSession().setAttribute("user", user);
             return new ModelAndView("main");
+        }
+    }
+
+    @RequestMapping(value = "registerCheck.html")
+    public ModelAndView registerCheck(HttpServletRequest request, RegisterCommand command) {
+        log.error("********进入registerCheck.html页面***********");
+        if (command.getUserName().equals("") || command.getPassword().equals("")) {
+            return new ModelAndView("register", "error", "用户名/密码不能为空");
+        }
+        if (!command.getPassword().equals(command.getRePassword())) {
+            return new ModelAndView("register", "error", "两次密码输入不一致");
+        }
+        boolean isValidUser = userService.hasCurUser(command.getUserName());
+        //当前用户已经存在
+        if (isValidUser) {
+            return new ModelAndView("register", "error", "用户已注册，请重新输入");
+        } else {
+            userService.registerUser(command.getUserName(), command.getPassword());
+//            return "login";
+            return new ModelAndView("login", "success", "注册成功，请登录");
         }
     }
 

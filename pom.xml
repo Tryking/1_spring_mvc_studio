@@ -19,7 +19,6 @@
         <hibernate.validator.version>5.0.2.Final</hibernate.validator.version>
         <jetty.version>8.1.8.v20121106</jetty.version>
         <slf4j.version>1.7.5</slf4j.version>
-        <testng.version>6.8.7</testng.version>
     </properties>
 
     <dependencies>

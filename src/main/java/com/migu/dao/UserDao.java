@@ -15,9 +15,21 @@ public class UserDao {
     private final static String MATCH_COUNT_SQL = "SELECT count(*) FROM t_user WHERE user_name =? and password=?";
     private final static String FIND_USER_SQL = "SELECT user_id,user_name,credits FROM t_user WHERE user_name=?";
     private final static String UPDATE_LOGIN_INFO_SQL = "UPDATE t_user SET last_visit=?,last_ip=?,credits=? WHERE user_id=?";
+    private final static String REGISTER_USER_SQL = "INSERT INTO t_user (user_name,password) VALUES(?,?)";
+    private final static String EXIST_USER_SQL = "SELECT count(*) FROM t_user WHERE user_name =?";
 
     public int getMatchCount(String userName, String password) {
         return jdbcTemplate.queryForObject(MATCH_COUNT_SQL, new Object[]{userName, password}, Integer.class);
+    }
+
+    /**
+     * 是否存在当前用户
+     *
+     * @param userName
+     * @return
+     */
+    public int isExistUser(String userName) {
+        return jdbcTemplate.queryForObject(EXIST_USER_SQL, new Object[]{userName}, Integer.class);
     }
 
     public User findUserByUserName(final String userName) {
@@ -39,5 +51,9 @@ public class UserDao {
     @Autowired
     public void setJdbcTemplate(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
+    }
+
+    public void registerUser(User user) {
+        jdbcTemplate.update(REGISTER_USER_SQL, new Object[]{user.getUserName(), user.getPassword()});
     }
 }

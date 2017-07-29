@@ -18,8 +18,20 @@ public class UserService {
         return matchCount > 0;
     }
 
+    public boolean hasCurUser(String userName) {
+        int matchCount = userDao.isExistUser(userName);
+        return matchCount > 0;
+    }
+
     public User findUserByUserName(String userName) {
         return userDao.findUserByUserName(userName);
+    }
+
+    public void registerUser(String userName, String password) {
+        User user = new User();
+        user.setUserName(userName);
+        user.setPassword(password);
+        userDao.registerUser(user);
     }
 
     @Transactional
